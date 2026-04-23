@@ -1,0 +1,461 @@
+/* Tech-dark theme */
+:root {
+  --bg: #070a10;
+  --panel: #0b1020;
+  --panel2: #0b162a;
+  --border: rgba(140, 170, 255, 0.14);
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.68);
+  --accent: #66d9ff;
+  --accent2: #7c5cff;
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+  --radius: 16px;
+  --container: 1080px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  line-height: 1.5;
+  color: var(--text);
+  background: radial-gradient(
+      1200px 900px at 10% -10%,
+      rgba(102, 217, 255, 0.18),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px 700px at 90% 0%,
+      rgba(124, 92, 255, 0.15),
+      transparent 55%
+    ),
+    var(--bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  width: min(var(--container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.skipLink {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(11, 16, 32, 0.92);
+  transform: translateY(-150%);
+  transition: transform 160ms ease;
+  z-index: 20;
+}
+.skipLink:focus {
+  outline: none;
+  transform: translateY(0);
+}
+
+.hero {
+  position: relative;
+  min-height: 68vh;
+  display: grid;
+  place-items: center;
+  overflow: clip;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero__controls {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+}
+
+.langToggle {
+  padding: 10px 12px;
+  border-radius: 999px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      180deg,
+      rgba(7, 10, 16, 0.25) 0%,
+      rgba(7, 10, 16, 0.82) 55%,
+      rgba(7, 10, 16, 1) 100%
+    ),
+    url("../assets/img/hero.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.05) contrast(1.03);
+  transform: scale(1.03);
+}
+
+.hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      to right,
+      rgba(102, 217, 255, 0.1),
+      transparent 35%,
+      rgba(124, 92, 255, 0.08)
+    ),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 42px 42px, 42px 42px;
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.hero__content {
+  position: relative;
+  padding: 84px 0 64px;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hero__title {
+  margin: 12px 0 10px;
+  font-size: clamp(42px, 4.6vw, 68px);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.hero__subtitle {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.hero__actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(11, 16, 32, 0.66);
+  color: var(--text);
+  transition: transform 140ms ease, border-color 140ms ease,
+    background 140ms ease, box-shadow 140ms ease;
+}
+.btn:focus-visible {
+  outline: 2px solid rgba(102, 217, 255, 0.65);
+  outline-offset: 2px;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(102, 217, 255, 0.35);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+.btn--primary {
+  background: linear-gradient(
+    135deg,
+    rgba(102, 217, 255, 0.18),
+    rgba(124, 92, 255, 0.15)
+  );
+  border-color: rgba(102, 217, 255, 0.35);
+}
+
+.btn--ghost {
+  background: rgba(11, 16, 32, 0.3);
+}
+
+.section {
+  padding: 56px 0;
+}
+
+.section__head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.section__title {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+}
+
+.section__lede {
+  margin: 12px 0 0;
+  max-width: 74ch;
+  color: var(--muted);
+}
+
+.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(11, 16, 32, 0.55);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (min-width: 760px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.card {
+  position: relative;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.03),
+      transparent 36%
+    ),
+    radial-gradient(
+      700px 250px at 0% 0%,
+      rgba(102, 217, 255, 0.12),
+      transparent 55%
+    ),
+    var(--panel);
+  box-shadow: var(--shadow);
+  overflow: clip;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    500px 120px at 20% 0%,
+    rgba(124, 92, 255, 0.18),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 160ms ease;
+  pointer-events: none;
+}
+
+.card:hover::before,
+.card:focus-within::before {
+  opacity: 1;
+}
+
+.card__inner {
+  padding: 18px 18px 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.card__media {
+  position: relative;
+  border-radius: 14px;
+  border: 1px solid rgba(140, 170, 255, 0.18);
+  background: radial-gradient(
+      900px 220px at 0% 0%,
+      rgba(102, 217, 255, 0.16),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(11, 16, 32, 0.35)
+    ),
+    var(--panel2);
+  overflow: clip;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+}
+
+.card__media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      to right,
+      rgba(102, 217, 255, 0.12),
+      transparent 42%,
+      rgba(124, 92, 255, 0.1)
+    ),
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 44px 44px, 44px 44px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.card__media::after {
+  content: "preview";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(140, 170, 255, 0.2);
+  background: rgba(7, 10, 16, 0.55);
+  backdrop-filter: blur(8px);
+}
+
+.card__media[data-empty="true"]::after {
+  content: "preview (add image in assets/img)";
+}
+
+.card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.92;
+  filter: saturate(1.05) contrast(1.03);
+}
+
+.card__titleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card__title {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+}
+
+.pill {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--border);
+  background: rgba(11, 22, 42, 0.7);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.card__desc {
+  margin: 0;
+  color: var(--muted);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.card__link {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(11, 16, 32, 0.45);
+  transition: transform 140ms ease, border-color 140ms ease,
+    background 140ms ease;
+}
+
+.card__link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(102, 217, 255, 0.32);
+  background: rgba(11, 16, 32, 0.62);
+}
+
+.card__link:focus-visible {
+  outline: 2px solid rgba(102, 217, 255, 0.65);
+  outline-offset: 2px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 18px 0;
+  background: rgba(7, 10, 16, 0.7);
+}
+
+.footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.footer__left {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.footer__mark {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

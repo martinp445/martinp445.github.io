@@ -1,288 +1,166 @@
-(function () {
-  "use strict";
+const projects = [
+  {
+    title: { en: "Kite and surf school", cs: "Škola kiteboardingu a surfingu" },
+    desc: { en: "Kiteboard and surf school and rental website.", cs: "Webové stránky kiteboardové a surfové školy a půjčovny." },
+    tags: ["HTML", "CSS", "JS"],
+    image: "assets/img/kiteprojectview.png",
+    url: "projects/kiteweb/index.html",
+  },
+  {
+    title: { en: "Project Two", cs: "Projekt dva" },
+    desc: { en: "Short description…", cs: "Krátký popis…" },
+    tags: ["HTML", "CSS", "JS"],
+    image: "assets/img/project-2.jpg",
+    url: "#",
+  },
+];
 
-  var yearEl = document.getElementById("year");
-  if (yearEl) {
-    yearEl.textContent = String(new Date().getFullYear());
+const I18N = {
+  en: {
+    "hero.kicker": "portfolio / projects",
+    "hero.subtitle":
+      "A small, technical showcase of things I build — fast, clean, and pragmatic.",
+    "about.title": "About",
+    "about.lede":
+      "This single-page site is built with HTML5, CSS3, and vanilla JavaScript. The layout is intentionally minimal and dark, with a subtle “terminal” vibe.",
+    "projects.title": "Projects",
+    "projects.hint.before": "Add more projects by appending a new item in",
+    "footer.contact": "Contact: info@email.com",
+    "card.pill.link": "link",
+    "card.tags.aria": "Tech tags",
+    "card.open": "Open project",
+    "card.aria.openPrefix": "Open",
+  },
+  cs: {
+    "hero.kicker": "portfolio / projekty",
+    "hero.subtitle":
+      "Malá technická ukázka toho, co tvořím — rychle, čistě a pragmaticky.",
+    "about.title": "O mně",
+    "about.lede":
+      "Tato jednostránková stránka je postavená na HTML5, CSS3 a čistém JavaScriptu. Rozvržení je záměrně minimalistické a tmavé, s jemnou „terminálovou“ atmosférou.",
+    "projects.title": "Projekty",
+    "projects.hint.before": "Další projekty přidáš připsáním položky do",
+    "footer.contact": "Kontakt: info@email.com",
+    "card.pill.link": "odkaz",
+    "card.tags.aria": "Technologie",
+    "card.open": "Otevřít projekt",
+    "card.aria.openPrefix": "Otevřít",
+  },
+};
+
+function getInitialLang() {
+  const saved = localStorage.getItem("lang");
+  if (saved === "en" || saved === "cs") return saved;
+  const nav = (navigator.language || "").toLowerCase();
+  return nav.startsWith("cs") ? "cs" : "en";
+}
+
+let currentLang = "en";
+
+function t(key) {
+  return I18N[currentLang]?.[key] ?? I18N.en[key] ?? key;
+}
+
+function el(tag, { className, text, attrs } = {}) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text) node.textContent = text;
+  if (attrs) {
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  }
+  return node;
+}
+
+function setLang(next) {
+  currentLang = next === "cs" ? "cs" : "en";
+  document.documentElement.lang = currentLang;
+  localStorage.setItem("lang", currentLang);
+
+  const btn = document.getElementById("langToggle");
+  if (btn) {
+    btn.textContent = currentLang.toUpperCase();
+    btn.setAttribute("aria-label", currentLang === "cs" ? "Switch to English" : "Přepnout do češtiny");
   }
 
-  var body = document.body;
-  var navToggle = document.querySelector(".nav-toggle");
-  var siteNav = document.getElementById("site-nav");
-  var navLinks = siteNav ? siteNav.querySelectorAll('a[href^="#"]') : [];
-
-  function setNavOpen(open) {
-    body.classList.toggle("nav-open", open);
-    if (navToggle) {
-      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
-      navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    }
+  for (const node of document.querySelectorAll("[data-i18n]")) {
+    const key = node.getAttribute("data-i18n");
+    if (!key) continue;
+    node.textContent = t(key);
   }
 
-  if (navToggle && siteNav) {
-    navToggle.addEventListener("click", function () {
-      setNavOpen(!body.classList.contains("nav-open"));
-    });
+  renderProjects();
+}
 
-    navLinks.forEach(function (link) {
-      link.addEventListener("click", function () {
-        setNavOpen(false);
-      });
-    });
+function renderProjects() {
+  const grid = document.getElementById("projectsGrid");
+  if (!grid) return;
 
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") {
-        setNavOpen(false);
-      }
-    });
-  }
+  grid.textContent = "";
 
-  document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-    var id = anchor.getAttribute("href");
-    if (!id || id === "#") {
-      return;
-    }
-    anchor.addEventListener("click", function (e) {
-      var target = document.querySelector(id);
-      if (!target) {
-        return;
-      }
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (history.replaceState) {
-        history.replaceState(null, "", id);
-      }
-    });
-  });
+  for (const p of projects) {
+    const card = el("article", { className: "card", attrs: { role: "listitem" } });
 
-  var sections = document.querySelectorAll("main section[id]");
-  var navAnchors = document.querySelectorAll('.site-nav a[href^="#"]');
+    const inner = el("div", { className: "card__inner" });
 
-  if (sections.length && navAnchors.length && "IntersectionObserver" in window) {
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) {
-            return;
-          }
-          var id = entry.target.getAttribute("id");
-          if (!id) {
-            return;
-          }
-          navAnchors.forEach(function (a) {
-            a.classList.toggle("is-active", a.getAttribute("href") === "#" + id);
-          });
-        });
+    const media = el("div", { className: "card__media", attrs: { "aria-hidden": "true" } });
+    const img = el("img", {
+      className: "card__img",
+      attrs: {
+        src: p.image || "",
+        alt: "",
+        loading: "lazy",
+        decoding: "async",
       },
-      { rootMargin: "-40% 0px -45% 0px", threshold: 0 }
-    );
-    sections.forEach(function (sec) {
-      observer.observe(sec);
+    });
+    img.addEventListener("error", () => {
+      media.setAttribute("data-empty", "true");
+      img.remove();
+    });
+    if (p.image) media.append(img);
+
+    const titleText = typeof p.title === "string" ? p.title : p.title?.[currentLang] ?? p.title?.en ?? "";
+    const descText = typeof p.desc === "string" ? p.desc : p.desc?.[currentLang] ?? p.desc?.en ?? "";
+
+    const titleRow = el("div", { className: "card__titleRow" });
+    titleRow.append(el("h3", { className: "card__title", text: titleText }));
+    titleRow.append(el("span", { className: "pill", text: t("card.pill.link") }));
+
+    const desc = el("p", { className: "card__desc", text: descText });
+
+    const tags = el("div", { className: "tags", attrs: { "aria-label": t("card.tags.aria") } });
+    for (const t of p.tags ?? []) tags.append(el("span", { className: "pill", text: t }));
+
+    const link = el("a", {
+      className: "card__link",
+      attrs: {
+        href: p.url || "#",
+        "aria-label": `${t("card.aria.openPrefix")} ${titleText}`,
+      },
+    });
+    link.append(el("span", { text: t("card.open") }));
+    link.append(el("span", { className: "muted", text: "→" }));
+
+    inner.append(media, titleRow, desc, tags, link);
+    card.append(inner);
+    grid.append(card);
+  }
+}
+
+function setYear() {
+  const year = document.getElementById("year");
+  if (year) year.textContent = String(new Date().getFullYear());
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  currentLang = getInitialLang();
+  const btn = document.getElementById("langToggle");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      setLang(currentLang === "en" ? "cs" : "en");
     });
   }
 
-  var lessonSection = document.getElementById("lessons");
-  var sportSelect = document.getElementById("sport");
-  var levelSelect = document.getElementById("level");
-  var messageField = document.getElementById("message");
-  var contactSection = document.getElementById("contact");
-  var formSuccessBanner = document.getElementById("form-success");
+  setLang(currentLang);
+  setYear();
+});
 
-  var sportLabels = { kite: "Kiteboarding", surf: "Surfing" };
-  var levelLabels = { beginner: "Beginner", intermediate: "Intermediate", pro: "Pro" };
-
-  function clearInlineFieldErrors() {
-    [
-      "name-error",
-      "email-error",
-      "sport-error",
-      "level-error",
-      "lesson-start-error",
-      "lesson-end-error",
-      "message-error"
-    ].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) {
-        el.textContent = "";
-        el.hidden = true;
-      }
-    });
-  }
-
-  if (lessonSection && sportSelect && levelSelect && contactSection) {
-    lessonSection.addEventListener("click", function (e) {
-      var card = e.target.closest(".level-card[data-sport][data-level]");
-      if (!card) {
-        return;
-      }
-      var sport = card.getAttribute("data-sport");
-      var level = card.getAttribute("data-level");
-      if (!sport || !level) {
-        return;
-      }
-
-      sportSelect.value = sport;
-      levelSelect.value = level;
-
-      if (messageField && !messageField.value.trim()) {
-        messageField.value =
-          "I'd like to book a " +
-          (sportLabels[sport] || sport) +
-          " lesson (" +
-          (levelLabels[level] || level) +
-          ").";
-      }
-
-      setNavOpen(false);
-      clearInlineFieldErrors();
-      if (formSuccessBanner) {
-        formSuccessBanner.hidden = true;
-      }
-
-      var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      contactSection.scrollIntoView({
-        behavior: reducedMotion ? "auto" : "smooth",
-        block: "start"
-      });
-      if (history.replaceState) {
-        history.replaceState(null, "", "#contact");
-      }
-
-      var nameInput = document.getElementById("name");
-      if (nameInput) {
-        window.setTimeout(
-          function () {
-            nameInput.focus({ preventScroll: true });
-          },
-          reducedMotion ? 0 : 450
-        );
-      }
-    });
-  }
-
-  var form = document.getElementById("contact-form");
-  if (!form) {
-    return;
-  }
-
-  var fields = [
-    { id: "name", errorId: "name-error", message: "Please enter your name." },
-    { id: "email", errorId: "email-error", message: "Please enter a valid email.", validate: isValidEmail },
-    { id: "sport", errorId: "sport-error", message: "Please choose a sport." },
-    { id: "level", errorId: "level-error", message: "Please choose your level." },
-    { id: "lesson-start", errorId: "lesson-start-error", message: "Please choose a lesson start date." },
-    { id: "lesson-end", errorId: "lesson-end-error", message: "Please choose a lesson end date." },
-    { id: "message", errorId: "message-error", message: "Please add a short message." }
-  ];
-
-  var successEl = document.getElementById("form-success");
-
-  function isValidEmail(value) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-  }
-
-  function showError(errorEl, text) {
-    if (!errorEl) {
-      return;
-    }
-    errorEl.textContent = text;
-    errorEl.hidden = false;
-  }
-
-  function clearErrors() {
-    fields.forEach(function (f) {
-      var el = document.getElementById(f.errorId);
-      if (el) {
-        el.textContent = "";
-        el.hidden = true;
-      }
-    });
-  }
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    clearErrors();
-    if (successEl) {
-      successEl.hidden = true;
-    }
-
-    var ok = true;
-    fields.forEach(function (f) {
-      var input = document.getElementById(f.id);
-      var err = document.getElementById(f.errorId);
-      if (!input) {
-        return;
-      }
-      var value;
-      if (input.tagName === "SELECT") {
-        value = input.value;
-      } else if (input.type === "email") {
-        value = input.value.trim();
-      } else if (input.type === "date") {
-        value = input.value;
-      } else {
-        value = input.value.trim();
-      }
-      if (!value) {
-        showError(err, f.message);
-        ok = false;
-        return;
-      }
-      if (f.validate && !f.validate(value)) {
-        showError(err, f.message);
-        ok = false;
-      }
-    });
-
-    var lessonStartInput = document.getElementById("lesson-start");
-    var lessonEndInput = document.getElementById("lesson-end");
-    if (ok && lessonStartInput && lessonEndInput) {
-      var startVal = lessonStartInput.value;
-      var endVal = lessonEndInput.value;
-      if (startVal && endVal && endVal < startVal) {
-        showError(
-          document.getElementById("lesson-end-error"),
-          "Lesson end must be on or after the start date."
-        );
-        ok = false;
-      }
-    }
-
-    if (ok && successEl) {
-      successEl.hidden = false;
-      form.reset();
-      syncLessonDateConstraints();
-    }
-  });
-
-  function todayISODate() {
-    var d = new Date();
-    var mo = d.getMonth() + 1;
-    var day = d.getDate();
-    var m = mo < 10 ? "0" + mo : String(mo);
-    var dy = day < 10 ? "0" + day : String(day);
-    return d.getFullYear() + "-" + m + "-" + dy;
-  }
-
-  function syncLessonDateConstraints() {
-    var start = document.getElementById("lesson-start");
-    var end = document.getElementById("lesson-end");
-    if (!start || !end) {
-      return;
-    }
-    var today = todayISODate();
-    start.setAttribute("min", today);
-    var minEnd = start.value && start.value >= today ? start.value : today;
-    end.setAttribute("min", minEnd);
-    if (end.value && start.value && end.value < start.value) {
-      end.value = start.value;
-    }
-  }
-
-  var lessonStartEl = document.getElementById("lesson-start");
-  if (lessonStartEl) {
-    lessonStartEl.addEventListener("change", syncLessonDateConstraints);
-    lessonStartEl.addEventListener("input", syncLessonDateConstraints);
-  }
-  syncLessonDateConstraints();
-})();
