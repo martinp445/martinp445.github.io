@@ -7,11 +7,11 @@ const projects = [
     url: "projects/kiteweb/index.html",
   },
   {
-    title: { en: "Project Two", cs: "Projekt dva" },
-    desc: { en: "Short description…", cs: "Krátký popis…" },
-    tags: ["HTML", "CSS", "JS"],
-    image: "assets/img/project-2.jpg",
-    url: "#",
+    title: { en: "Third beer", cs: "Třetí pivo" },
+    desc: { en: "Beer counter application in React. Just for fun.", cs: "Aplikace na počítání piv. Jen tak pro radost na zkoušku Reactu." },
+    tags: ["React", "JSX", "JS", "CSS"],
+    image: "assets/img/thirdbeerview.png",
+    url: "https://martinp445.github.io/Third-beer/",
   },
 ];
 
